@@ -58,7 +58,12 @@ _✨ 通过ai.animedb.cn的api识别动漫、galgame角色 ✨_
 
 命令: {#} {识别|角色|人物|} [gal|动漫]
 
-示例: #识别gal
+示例:
+
+![image](./img/use_ex01.jpg)
+![image](./img/use_ex02.jpg)
+![image](./img/use_ex03.jpg)
+![image](./img/use_ex04.jpg)
 
 大括号内{}为必要参数, 中括号内[]为可选参数, 默认使用动漫模型
 
@@ -79,3 +84,5 @@ _✨ 通过ai.animedb.cn的api识别动漫、galgame角色 ✨_
 | animetrace_model_gal   | 否 | "game_model_kirakira"   | galgame模型 |
 | animetrace_max_num     | 否 | 3                       | 一个角色最多返回几个识别结果 |
 | nickname               | 否 | ["anime trace"]         | bot昵称列表 |
+
+动漫模型和galgame模型请前往 [ai.animedb.cn](ai.animedb.cn)查看
