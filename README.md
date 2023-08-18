@@ -85,4 +85,4 @@ _✨ 通过ai.animedb.cn的api识别动漫、galgame角色 ✨_
 | animetrace_max_num     | 否 | 3                       | 一个角色最多返回几个识别结果 |
 | nickname               | 否 | ["anime trace"]         | bot昵称列表，只取nickname[0] |
 
-动漫模型和galgame模型请前往 [ai.animedb.cn](ai.animedb.cn)查看
+动漫模型和galgame模型请前往 [ai.animedb.cn](https://ai.animedb.cn)查看
