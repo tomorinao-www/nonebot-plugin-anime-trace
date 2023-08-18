@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "nonebot-plugin-anime-trace"
+version = "1.0"
+description = "通过ai.animedb.cn的api识别动漫、galgame角色"
+authors = ["友利奈绪-勿忘我 <1520872279@qq.com>"]
+license = "MIT"
+readme = "README.md"
+packages = [{include = "nonebot_plugin_anime_trace"}]
+homepage = "https://github.com/tomorinao-www/nonebot-plugin-anime-trace"
+repository = "https://github.com/tomorinao-www/nonebot-plugin-anime-trace"
+documentation = "https://github.com/tomorinao-www/nonebot-plugin-anime-trace#README.md"
+
+[tool.poetry.dependencies]
+python = ">=3.10"
+nonebot2 = ">= 2.0.0"
+nonebot-adapter-onebot = ">= 2.2.3"
+httpx = ">=0.24.1"
+pillow = ">=9.5.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
