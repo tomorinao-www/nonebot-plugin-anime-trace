@@ -83,6 +83,6 @@ _✨ 通过ai.animedb.cn的api识别动漫、galgame角色 ✨_
 | animetrace_model_anime | 否 | "pre_stable"            | 动漫模型 |
 | animetrace_model_gal   | 否 | "game_model_kirakira"   | galgame模型 |
 | animetrace_max_num     | 否 | 3                       | 一个角色最多返回几个识别结果 |
-| nickname               | 否 | ["anime trace"]         | bot昵称列表 |
+| nickname               | 否 | ["anime trace"]         | bot昵称列表，只取nickname[0] |
 
 动漫模型和galgame模型请前往 [ai.animedb.cn](ai.animedb.cn)查看
