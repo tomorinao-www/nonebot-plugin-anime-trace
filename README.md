@@ -1,7 +1,7 @@
 <div align="center">
   <a href="https://v2.nonebot.dev/store"><img src="https://github.com/A-kirami/nonebot-plugin-template/blob/resources/nbp_logo.png" width="180" height="180" alt="NoneBotPluginLogo"></a>
   <br>
-  <p><img src="https://github.com/A-kirami/nonebot-plugin-template/blob/resources/NoneBotPlugin.svg" width="240" alt="NoneBotPluginText"></p>
+  <a href="https://v2.nonebot.dev/store"><img src="https://github.com/A-kirami/nonebot-plugin-template/blob/resources/NoneBotPlugin.svg" width="240" alt="NoneBotPluginText"></a>
 </div>
 
 <div align="center">
@@ -21,10 +21,6 @@ _✨ 通过ai.animedb.cn的api识别动漫、galgame角色 ✨_
 
 </div>
 
-
-<!-- ## 📖 介绍
-
- -->
 
 
 ## 💿 安装
