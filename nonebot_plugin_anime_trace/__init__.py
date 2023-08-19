@@ -27,13 +27,11 @@ from .config import Config
 __plugin_meta__ = PluginMetadata(
     name="识别动漫gal角色",
     description="通过ai.animedb.cn的api识别动漫、galgame角色",
-    usage="""
-        命令: {#} {识别|角色|人物|} [gal|动漫]
-        示例: #识别gal
-        大括号内{}为必要参数, 中括号内[]为可选参数, 默认为动漫模型
-        附带一张图片、或回复一张图片、或再发送一张图片
-        可以自定义命令符、命令关键字
-        """,
+    usage="""命令: {#} {识别|角色|人物} [gal|动漫]
+示例: #识别gal
+大括号内{}为必要关键字, 中括号内[]为可选参数, 默认为动漫模型
+附带一张图片、或回复一张图片、或再发送一张图片
+可以自定义命令符、命令关键字""",
     type="application",
     homepage="https://github.com/tomorinao-www/nonebot-plugin-anime-trace",
     config=Config,
