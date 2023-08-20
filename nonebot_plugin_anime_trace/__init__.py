@@ -144,7 +144,10 @@ async def main(bot: Bot, event: Event, state: T_State):
 
     # 发送消息
     try:
-        nickname = config.nickname[0] if config.nickname else "anime trace"
+        nickname = config.nickname[0]
+    except:
+        nickname = "anime trace"
+    try:
         msgs = [
             {
                 "type": "node",
