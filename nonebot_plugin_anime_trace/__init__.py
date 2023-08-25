@@ -105,11 +105,9 @@ async def main(bot: Bot, event: Event, state: T_State):
                 url=url, headers=headers, data=None, files=files, timeout=30
             )
             content = json.loads(res.content)
-            if res.is_error:
-                await acg_trace.finish("识别失败，可能是网络问题~", at_sender=True)
     except Exception as e:
         logger.exception(f"post({url})失败{repr(e)}")
-        await acg_trace.finish(f"{repr(e)}识别失败，可能是网络问题~", at_sender=True)
+        await acg_trace.finish(f"识别失败，换张图片试试吧~\n{res}\n{repr(e)}", at_sender=True)
     finally:
         files["image"].close()
         os.remove(img_path)

@@ -23,6 +23,20 @@ _✨ 通过ai.animedb.cn的api识别动漫、galgame角色 ✨_
 
 
 
+## 常见问题 Q&A
+
+### 没有识别到任何角色
+网站没有识别到该图中的角色
+
+### 出错啦~可能是图里角色太多了content:{code:-1}
+网站处理图片出错，可能是图中角色过多、或者网站后端挂了，可以尝试裁剪图片
+
+### 识别失败，换张图片试试吧~<Response [504 Gateway Time-out]>
+网站接收图片出错，可能是图中角色过多、或者网站后端挂了，可以尝试裁剪图片
+
+### 其他
+请先去[ai.animedb.cn](https://ai.animedb.cn)尝试能否识别，若能识别，联系我更新；若不能识别，等待站长修复
+
 ## 💿 安装
 
 <details open>
@@ -85,3 +99,7 @@ _✨ 通过ai.animedb.cn的api识别动漫、galgame角色 ✨_
 | nickname               | 否 | ["anime trace"]         | bot昵称列表，只取nickname[0] |
 
 动漫模型和galgame模型请前往 [ai.animedb.cn](https://ai.animedb.cn)查看
+
+## TODO
+
+增加ai绘图鉴别
