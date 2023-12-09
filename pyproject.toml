@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "nonebot-plugin-anime-trace"
-version = "0.1.3"
+version = "0.1.4"
 description = "通过ai.animedb.cn的api识别动漫、galgame角色"
 authors = ["友利奈绪-勿忘我 <1520872279@qq.com>"]
 license = "MIT"

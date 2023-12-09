@@ -14,6 +14,7 @@ from nonebot.adapters.onebot.v11 import (
     PrivateMessageEvent,
     GroupMessageEvent,
     MessageEvent,
+    NetworkError
 )
 from nonebot.adapters.onebot.v11.helpers import extract_image_urls
 from nonebot.params import Arg
@@ -132,11 +133,10 @@ async def main(bot: Bot, event: Event, state: T_State):
         item_img.save(img_bytes, format="JPEG", quality=int(item["box"][4] * 100))
         char = item["char"]
         may_num = min(config.animetrace_max_num, len(char))
-        msg_txt = Message(f"该角色有{may_num}种可能\n")
+        msg_txt = f"该角色有{may_num}种可能\n"
         for i in range(may_num):
-            msg_txt += Message(
-                f"{i+1}\n角色:{char[i]['name']}\n来自{mode}:{char[i]['cartoonname']}\n"
-            )
+            msg_txt += f"{i+1}\n角色:{char[i]['name']}\n来自{mode}:{char[i]['cartoonname']}\n"
+            
         message = msg_txt + MessageSegment.image(img_bytes.getvalue())
         message_list.append(message)
 
@@ -163,9 +163,10 @@ async def main(bot: Bot, event: Event, state: T_State):
             group_id=event.group_id if isinstance(event, GroupMessageEvent) else 0,
             messages=msgs,
         )
+        acg_trace.skip() # 发送成功就跳过单条消息发送
     except ActionFailed as e:
         logger.warning(e)
-        await acg_trace.finish(
-            message=Message("消息被风控了~合并消息发送失败"),
-            at_sender=True,
-        )
+
+    # 单条消息发送
+    for msg in message_list:
+        await acg_trace.send(msg)
