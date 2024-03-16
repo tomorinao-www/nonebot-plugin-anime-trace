@@ -1,7 +1,7 @@
-from nonebot.config import BaseConfig
+from pydantic import BaseModel
 
 
-class Config(BaseConfig):
+class Config(BaseModel):
     # 命令符
     animetrace_cmd: str = "#"
     # 命令关键字
