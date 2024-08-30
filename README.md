@@ -66,12 +66,15 @@ _✨ 通过ai.animedb.cn的api识别动漫、galgame角色 ✨_
 可以自定义命令符、命令关键字
 
 <details open>
-<summary>示例:</summary>
-  
-![image](./img/use_ex01.jpg)
-![image](./img/use_ex02.jpg)
-![image](./img/use_ex03.jpg)
-![image](./img/use_ex04.jpg)
+<summary>
+示例:
+</summary>
+
+|![image](./img/use_ex01.jpg)|![image](./img/use_ex02.jpg)|
+|-|-|
+
+|![image](./img/use_ex03.jpg)|![image](./img/use_ex04.jpg)|
+|-|-|
 
 </details>
 
@@ -107,4 +110,5 @@ _✨ 通过ai.animedb.cn的api识别动漫、galgame角色 ✨_
 
 ## TODO
 
-增加ai绘图鉴别
+- [ ] 增加ai绘图鉴别
+- [ ] 添加结果图片对比
