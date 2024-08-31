@@ -110,5 +110,5 @@ _✨ 通过ai.animedb.cn的api识别动漫、galgame角色 ✨_
 
 ## TODO
 
-- [ ] 增加ai绘图鉴别
+- [X] 增加ai绘图鉴别
 - [ ] 添加结果图片对比
