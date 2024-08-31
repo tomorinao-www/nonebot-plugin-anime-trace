@@ -13,8 +13,7 @@ from nonebot.adapters.onebot.v11 import (
     MessageSegment,
     PrivateMessageEvent,
     GroupMessageEvent,
-    MessageEvent,
-    NetworkError
+    MessageEvent
 )
 from nonebot.adapters.onebot.v11.helpers import extract_image_urls
 from nonebot.params import Arg
@@ -96,7 +95,8 @@ async def main(bot: Bot, event: Event, state: T_State):
 
     # 发送请求
     model = state["model"]
-    url = f"https://aiapiv2.animedb.cn/ai/api/detect?force_one=1&model={model}&ai_detect=0"
+    ai_detect = config.animetrace_ai_detect
+    url = f"https://aiapiv2.animedb.cn/ai/api/detect?force_one=1&model={model}&ai_detect={ai_detect}"
     headers = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36 Edg/114.0.1823.67",
     }
@@ -122,6 +122,8 @@ async def main(bot: Bot, event: Event, state: T_State):
 
     # 构造消息
     res_start_msg = Message(f"共识别到{char_nums}个角色\n更多模型请访问:https://ai.animedb.cn")
+    if content["ai"]:
+        res_start_msg = "该图可能是ai绘图!\n" + res_start_msg
     message_list = [res_start_msg]
     mode = state["mode"]
     for item in content["data"]:

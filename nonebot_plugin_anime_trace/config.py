@@ -2,6 +2,8 @@ from pydantic import BaseModel
 
 
 class Config(BaseModel):
+    # 是否检测ai图
+    animetrace_ai_detect: bool = False
     # 命令符
     animetrace_cmd: str = "#"
     # 命令关键字
