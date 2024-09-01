@@ -13,7 +13,7 @@ from nonebot.adapters.onebot.v11 import (
     MessageSegment,
     PrivateMessageEvent,
     GroupMessageEvent,
-    MessageEvent
+    MessageEvent,
 )
 from nonebot.adapters.onebot.v11.helpers import extract_image_urls
 from nonebot.params import Arg
@@ -108,20 +108,26 @@ async def main(bot: Bot, event: Event, state: T_State):
             content = json.loads(res.content)
     except Exception as e:
         logger.exception(f"post({url})失败{repr(e)}")
-        await acg_trace.finish(f"识别失败，换张图片试试吧~\n{res}\n{repr(e)}", at_sender=True)
+        await acg_trace.finish(
+            f"识别失败，换张图片试试吧~\n{res}\n{repr(e)}", at_sender=True
+        )
     finally:
         files["image"].close()
         os.remove(img_path)
 
     # 检查识别结果
     if content["code"] != 0:
-        await acg_trace.finish(f"出错啦~可能是图里角色太多了~\ncontent:{content}", at_sender=True)
+        await acg_trace.finish(
+            f"出错啦~可能是图里角色太多了~\ncontent:{content}", at_sender=True
+        )
     char_nums = len(content["data"])
     if char_nums == 0:
         await acg_trace.finish(f"没有识别到任何角色\ncontent:{content}", at_sender=True)
 
     # 构造消息
-    res_start_msg = Message(f"共识别到{char_nums}个角色\n更多模型请访问:https://ai.animedb.cn")
+    res_start_msg = Message(
+        f"共识别到{char_nums}个角色\n更多模型请访问:https://ai.animedb.cn"
+    )
     if content["ai"]:
         res_start_msg = "该图可能是ai绘图!\n" + res_start_msg
     message_list = [res_start_msg]
@@ -137,8 +143,12 @@ async def main(bot: Bot, event: Event, state: T_State):
         may_num = min(config.animetrace_max_num, len(char))
         msg_txt = f"该角色有{may_num}种可能\n"
         for i in range(may_num):
-            msg_txt += f"{i+1}\n角色:{char[i]['name']}\n来自{mode}:{char[i]['cartoonname']}\n"
-            
+            msg_txt += f"{i+1}\n\
+                    角色:{char[i]['name']}\n\
+                    来自{mode}:{char[i]['cartoonname']}\n\
+                    bing搜索:www.bing.com/images/search?q={char[i]['name']}\n\
+                    萌娘百科:zh.moegirl.org.cn/index.php?search={char[i]['name']}"
+
         message = msg_txt + MessageSegment.image(img_bytes.getvalue())
         message_list.append(message)
 
@@ -165,7 +175,7 @@ async def main(bot: Bot, event: Event, state: T_State):
             group_id=event.group_id if isinstance(event, GroupMessageEvent) else 0,
             messages=msgs,
         )
-        acg_trace.skip() # 发送成功就跳过单条消息发送
+        acg_trace.skip()  # 发送成功就跳过单条消息发送
     except ActionFailed as e:
         logger.warning(e)
 
