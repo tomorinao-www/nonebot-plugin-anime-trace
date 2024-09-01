@@ -143,11 +143,13 @@ async def main(bot: Bot, event: Event, state: T_State):
         may_num = min(config.animetrace_max_num, len(char))
         msg_txt = f"该角色有{may_num}种可能\n"
         for i in range(may_num):
-            msg_txt += f"{i+1}\n\
-                    角色:{char[i]['name']}\n\
-                    来自{mode}:{char[i]['cartoonname']}\n\
-                    bing搜索:www.bing.com/images/search?q={char[i]['name']}\n\
-                    萌娘百科:zh.moegirl.org.cn/index.php?search={char[i]['name']}"
+            msg_txt += (
+                f"{i+1}\n"
+                f"角色:{char[i]['name']}\n"
+                f"来自{mode}:{char[i]['cartoonname']}\n"
+                f"bing搜索:www.bing.com/images/search?q={char[i]['name']}\n"
+                f"萌娘百科:zh.moegirl.org.cn/index.php?search={char[i]['name']}"
+            )
 
         message = msg_txt + MessageSegment.image(img_bytes.getvalue())
         message_list.append(message)
