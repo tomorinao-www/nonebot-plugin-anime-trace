@@ -4,7 +4,7 @@ import os
 
 from httpx import AsyncClient
 from PIL import Image
-
+from urllib.parse import quote
 from nonebot import logger, on_keyword, get_plugin_config
 from nonebot.adapters.onebot.v11 import (
     Bot,
@@ -143,12 +143,14 @@ async def main(bot: Bot, event: Event, state: T_State):
         may_num = min(config.animetrace_max_num, len(char))
         msg_txt = f"该角色有{may_num}种可能\n"
         for i in range(may_num):
+            name = char[i]['name']
+            q = quote(name)
             msg_txt += (
                 f"{i+1}\n"
-                f"角色:{char[i]['name']}\n"
+                f"角色:{name}\n"
                 f"来自{mode}:{char[i]['cartoonname']}\n"
-                f"bing搜索:www.bing.com/images/search?q={char[i]['name']}\n"
-                f"萌娘百科:zh.moegirl.org.cn/index.php?search={char[i]['name']}"
+                f"bing搜索:www.bing.com/images/search?q={q}\n"
+                f"萌娘百科:zh.moegirl.org.cn/index.php?search={q}"
             )
 
         message = msg_txt + MessageSegment.image(img_bytes.getvalue())
