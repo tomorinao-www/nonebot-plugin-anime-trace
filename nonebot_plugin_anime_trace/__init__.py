@@ -22,6 +22,8 @@ from nonebot.exception import ActionFailed
 from nonebot.internal.matcher import Matcher
 from nonebot.typing import T_State
 from nonebot.plugin import PluginMetadata
+
+from .exception import NOExcept
 from .config import Config
 
 __plugin_meta__ = PluginMetadata(
@@ -38,7 +40,7 @@ __plugin_meta__ = PluginMetadata(
     supported_adapters={"~onebot.v11"},
 )
 
-config:  Config   =   get_plugin_config(Config)
+config: Config = get_plugin_config(Config)
 
 
 async def _cmd_check(bot: Bot, event: MessageEvent):
@@ -143,7 +145,7 @@ async def main(bot: Bot, event: Event, state: T_State):
         may_num = min(config.animetrace_max_num, len(char))
         msg_txt = f"该角色有{may_num}种可能\n"
         for i in range(may_num):
-            name = char[i]['name']
+            name = char[i]["name"]
             q = quote(name)
             msg_txt += (
                 f"\n{i+1}\n"
@@ -162,7 +164,11 @@ async def main(bot: Bot, event: Event, state: T_State):
     except:
         nickname = "anime trace"
     try:
-        if config.
+        if not config.animetrace_send_forward:
+            raise NOExcept(
+                f"config.animetrace_send_forward={config.animetrace_send_forward}"
+            )
+            pass
         msgs = [
             {
                 "type": "node",
@@ -181,8 +187,12 @@ async def main(bot: Bot, event: Event, state: T_State):
             messages=msgs,
         )
         acg_trace.skip()  # 发送成功就跳过单条消息发送
-    except ActionFailed, Exception as e:
-        logger.warning(e)
+    except ActionFailed as e:
+        logger.error(e)
+    except NOExcept as e:
+        logger.debug(e)
+    except Exception as e:
+        logger.debug(e)
 
     # 单条消息发送
     for msg in message_list:
