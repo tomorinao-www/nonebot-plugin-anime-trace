@@ -38,7 +38,7 @@ __plugin_meta__ = PluginMetadata(
     supported_adapters={"~onebot.v11"},
 )
 
-config = get_plugin_config(Config)
+config:  Config   =   get_plugin_config(Config)
 
 
 async def _cmd_check(bot: Bot, event: MessageEvent):
@@ -146,11 +146,11 @@ async def main(bot: Bot, event: Event, state: T_State):
             name = char[i]['name']
             q = quote(name)
             msg_txt += (
-                f"{i+1}\n"
+                f"\n{i+1}\n"
                 f"角色:{name}\n"
                 f"来自{mode}:{char[i]['cartoonname']}\n"
                 f"bing搜索:www.bing.com/images/search?q={q}\n"
-                f"萌娘百科:zh.moegirl.org.cn/index.php?search={q}"
+                f"萌娘百科:zh.moegirl.org.cn/index.php?search={q}\n"
             )
 
         message = msg_txt + MessageSegment.image(img_bytes.getvalue())
@@ -162,6 +162,7 @@ async def main(bot: Bot, event: Event, state: T_State):
     except:
         nickname = "anime trace"
     try:
+        if config.
         msgs = [
             {
                 "type": "node",
@@ -180,7 +181,7 @@ async def main(bot: Bot, event: Event, state: T_State):
             messages=msgs,
         )
         acg_trace.skip()  # 发送成功就跳过单条消息发送
-    except ActionFailed as e:
+    except ActionFailed, Exception as e:
         logger.warning(e)
 
     # 单条消息发送
