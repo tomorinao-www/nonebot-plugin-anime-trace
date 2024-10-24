@@ -10,7 +10,7 @@
 
 _✨ 通过 ai.animedb.cn 的 api 识别动漫、galgame 角色 ✨_
 
-<a href="./LICENSE">
+<a href="https://github.com/tomorinao-www/nonebot-plugin-anime-trace/blob/main/LICENSE">
     <img src="https://img.shields.io/github/license/tomorinao-www/nonebot-plugin-anime-trace.svg" alt="license">
 </a>
 <a href="https://pypi.python.org/pypi/nonebot-plugin-anime-trace">
