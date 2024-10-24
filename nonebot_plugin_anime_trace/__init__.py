@@ -18,7 +18,7 @@ from nonebot.adapters.onebot.v11 import (
 from nonebot.adapters.onebot.v11.helpers import extract_image_urls
 from nonebot.params import Arg
 from nonebot.rule import Rule
-from nonebot.exception import ActionFailed
+from nonebot.exception import ActionFailed, SkippedException
 from nonebot.internal.matcher import Matcher
 from nonebot.typing import T_State
 from nonebot.plugin import PluginMetadata
@@ -166,9 +166,8 @@ async def main(bot: Bot, event: Event, state: T_State):
     try:
         if not config.animetrace_send_forward:
             raise NOExcept(
-                f"config.animetrace_send_forward={config.animetrace_send_forward}"
+                f"准备发送单条消息，因为：config.animetrace_send_forward={config.animetrace_send_forward}"
             )
-            pass
         msgs = [
             {
                 "type": "node",
@@ -190,10 +189,14 @@ async def main(bot: Bot, event: Event, state: T_State):
     except ActionFailed as e:
         logger.error(e)
     except NOExcept as e:
+        # 表示没有异常，只用于跳出try（借鉴了nonebot的skip异常，finish异常等）
         logger.debug(e)
+        # 单条消息发送
+        for msg in message_list:
+            await acg_trace.send(msg)
+    except SkippedException as e:
+        logger.debug(e)
+        raise
     except Exception as e:
-        logger.debug(e)
-
-    # 单条消息发送
-    for msg in message_list:
-        await acg_trace.send(msg)
+        logger.error(e)
+        raise
