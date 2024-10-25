@@ -22,6 +22,21 @@ from nonebot.exception import ActionFailed
 from nonebot.internal.matcher import Matcher
 from nonebot.typing import T_State
 from nonebot.plugin import PluginMetadata
+from nonebot import require
+
+require("nonebot_plugin_alconna")
+
+from nonebot_plugin_alconna.uniseg import (
+    Target,
+    UniMessage,
+    SupportScope,
+    on_alconna,
+    Command,
+)
+from nonebot.rule import to_me
+from arclet.alconna import Alconna, Args
+
+
 from .config import Config
 
 __plugin_meta__ = PluginMetadata(
@@ -36,9 +51,19 @@ __plugin_meta__ = PluginMetadata(
     homepage="https://github.com/tomorinao-www/nonebot-plugin-anime-trace",
     config=Config,
     supported_adapters={"~onebot.v11"},
-)
+) 
 
 config = get_plugin_config(Config)
+
+weather = on_alconna(
+    Alconna("天气", Args["location?", str]),
+    aliases={"weather", "天气预报"},
+    rule=to_me(),
+)
+
+@Command("echo <...content>").build(auto_send_output=True).handle()
+async def _(content: UniMessage):
+    await content.finish()
 
 
 async def _cmd_check(bot: Bot, event: MessageEvent):
@@ -143,7 +168,7 @@ async def main(bot: Bot, event: Event, state: T_State):
         may_num = min(config.animetrace_max_num, len(char))
         msg_txt = f"该角色有{may_num}种可能\n"
         for i in range(may_num):
-            name = char[i]['name']
+            name = char[i]["name"]
             q = quote(name)
             msg_txt += (
                 f"{i+1}\n"
@@ -162,14 +187,12 @@ async def main(bot: Bot, event: Event, state: T_State):
     except:
         nickname = "anime trace"
     try:
+        # 使用
         msgs = [
             {
-                "type": "node",
-                "data": {
-                    "name": nickname,
-                    "uin": bot.self_id,
-                    "content": msg,
-                },
+                "name": nickname,
+                "uin": bot.self_id,
+                "content": UniMessage.text(text=msg),
             }
             for msg in message_list
         ]
