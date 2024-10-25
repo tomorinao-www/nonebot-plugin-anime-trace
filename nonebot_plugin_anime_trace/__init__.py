@@ -18,7 +18,7 @@ from nonebot.adapters.onebot.v11 import (
 from nonebot.adapters.onebot.v11.helpers import extract_image_urls
 from nonebot.params import Arg
 from nonebot.rule import Rule
-from nonebot.exception import ActionFailed
+from nonebot.exception import ActionFailed, SkippedException
 from nonebot.internal.matcher import Matcher
 from nonebot.typing import T_State
 from nonebot.plugin import PluginMetadata
@@ -37,6 +37,7 @@ from nonebot.rule import to_me
 from arclet.alconna import Alconna, Args
 
 
+from .exception import NOExcept
 from .config import Config
 
 __plugin_meta__ = PluginMetadata(
@@ -51,15 +52,16 @@ __plugin_meta__ = PluginMetadata(
     homepage="https://github.com/tomorinao-www/nonebot-plugin-anime-trace",
     config=Config,
     supported_adapters={"~onebot.v11"},
-) 
+)
 
-config = get_plugin_config(Config)
+config: Config = get_plugin_config(Config)
 
 weather = on_alconna(
     Alconna("天气", Args["location?", str]),
     aliases={"weather", "天气预报"},
     rule=to_me(),
 )
+
 
 @Command("echo <...content>").build(auto_send_output=True).handle()
 async def _(content: UniMessage):
@@ -171,11 +173,11 @@ async def main(bot: Bot, event: Event, state: T_State):
             name = char[i]["name"]
             q = quote(name)
             msg_txt += (
-                f"{i+1}\n"
+                f"\n{i+1}\n"
                 f"角色:{name}\n"
                 f"来自{mode}:{char[i]['cartoonname']}\n"
                 f"bing搜索:www.bing.com/images/search?q={q}\n"
-                f"萌娘百科:zh.moegirl.org.cn/index.php?search={q}"
+                f"萌娘百科:zh.moegirl.org.cn/index.php?search={q}\n"
             )
 
         message = msg_txt + MessageSegment.image(img_bytes.getvalue())
@@ -187,7 +189,10 @@ async def main(bot: Bot, event: Event, state: T_State):
     except:
         nickname = "anime trace"
     try:
-        # 使用
+        if not config.animetrace_send_forward:
+            raise NOExcept(
+                f"准备发送单条消息，因为：config.animetrace_send_forward={config.animetrace_send_forward}"
+            )
         msgs = [
             {
                 "name": nickname,
@@ -204,8 +209,16 @@ async def main(bot: Bot, event: Event, state: T_State):
         )
         acg_trace.skip()  # 发送成功就跳过单条消息发送
     except ActionFailed as e:
-        logger.warning(e)
-
-    # 单条消息发送
-    for msg in message_list:
-        await acg_trace.send(msg)
+        logger.error(e)
+    except NOExcept as e:
+        # 表示没有异常，只用于跳出try（借鉴了nonebot的skip异常，finish异常等）
+        logger.debug(e)
+        # 单条消息发送
+        for msg in message_list:
+            await acg_trace.send(msg)
+    except SkippedException as e:
+        logger.debug(e)
+        raise
+    except Exception as e:
+        logger.error(e)
+        raise
