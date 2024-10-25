@@ -79,7 +79,7 @@ _✨ 通过 ai.animedb.cn 的 api 识别动漫、galgame 角色 ✨_
 
 |          配置项          | 必填 |          默认值          |              说明              |
 | :---------------------: | :--: | :----------------------: | :---------------------------: |
-| animetrace_send_forward |  否  |         True             |       是否发送合并转发消息      |
+| animetrace_send_forward |  否  |         False             |       是否发送合并转发消息      |
 |  animetrace_ai_detect   |  否  |          False           |         是否检测 ai 图         |
 |     animetrace_cmd      |  否  |           "#"            |             命令符             |
 |   animetrace_keyword    |  否  | ["识别", "角色", "人物"] |           命令关键字            |

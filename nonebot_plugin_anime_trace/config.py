@@ -3,7 +3,7 @@ from pydantic import BaseModel
 
 class Config(BaseModel):
     # 是否合并转发消息
-    animetrace_send_forward: bool = True
+    animetrace_send_forward: bool = False
     # 是否检测ai图
     animetrace_ai_detect: bool = False
     # 命令符
