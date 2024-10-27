@@ -41,19 +41,19 @@ __plugin_meta__ = PluginMetadata(
     supported_adapters={"~onebot.v11"},
 )
 
-config: Config = get_plugin_config(Config)
+conf: Config = get_plugin_config(Config)
 
 
 async def _cmd_check(bot: Bot, event: MessageEvent):
     txt_msg = event.message.extract_plain_text().strip()
-    if config.animetrace_cmd in txt_msg:
+    if conf.animetrace_cmd in txt_msg:
         return True
 
 
 acg_trace = on_keyword(
-    config.animetrace_keyword,
+    conf.animetrace_keyword,
     rule=Rule(_cmd_check),
-    priority=config.animetrace_priority,
+    priority=conf.animetrace_priority,
     block=True,
 )
 
@@ -63,10 +63,10 @@ async def _(bot: Bot, event: MessageEvent, matcher: Matcher, state: T_State):
     # 选择模型
     txt_msg = event.message.extract_plain_text().strip()
     if "gal" in txt_msg:
-        state["model"] = config.animetrace_model_gal
+        state["model"] = conf.animetrace_model_gal
         state["mode"] = "galgame"
     else:
-        state["model"] = config.animetrace_model_anime
+        state["model"] = conf.animetrace_model_anime
         state["mode"] = "动漫"
     # 获取图片链接
     message = event.reply.message if event.reply else event.message
@@ -98,7 +98,7 @@ async def main(bot: Bot, event: Event, state: T_State):
 
     # 发送请求
     model = state["model"]
-    ai_detect = config.animetrace_ai_detect
+    ai_detect = conf.animetrace_ai_detect
     url = f"https://aiapiv2.animedb.cn/ai/api/detect?force_one=1&model={model}&ai_detect={ai_detect}"
     headers = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36 Edg/114.0.1823.67",
@@ -143,7 +143,7 @@ async def main(bot: Bot, event: Event, state: T_State):
         item_img = base_img.crop(box)
         item_img.save(img_bytes, format="JPEG", quality=int(item["box"][4] * 100))
         char = item["char"]
-        may_num = min(config.animetrace_max_num, len(char))
+        may_num = min(conf.animetrace_max_num, len(char))
         msg_txt = f"该角色有{may_num}种可能\n"
         for i in range(may_num):
             name = char[i]["name"]
@@ -161,13 +161,13 @@ async def main(bot: Bot, event: Event, state: T_State):
 
     # 发送消息
     try:
-        nickname = config.nickname[0]
+        nickname = conf.nickname[0]
     except:
         nickname = "anime trace"
     try:
-        if not config.animetrace_send_forward:
+        if not conf.animetrace_send_forward:
             raise NOExcept(
-                f"准备发送单条消息，因为：config.animetrace_send_forward={config.animetrace_send_forward}"
+                f"准备发送单条消息，因为：config.animetrace_send_forward={conf.animetrace_send_forward}"
             )
         msgs = [
             {
