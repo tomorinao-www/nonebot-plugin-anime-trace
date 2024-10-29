@@ -20,6 +20,9 @@ _✨ 通过 ai.animedb.cn 的 api 识别动漫、galgame 角色 ✨_
 <a href="https://github.com/tomorinao-www/naotool">
   <img src="https://img.shields.io/github/stars/tomorinao-www/nonebot-plugin-anime-trace.svg?style=social" alt="stars">
 </a>
+<a href="https://github.com/tomorinao-www/naotool">
+  <img src="https://img.shields.io/github/forks/tomorinao-www/nonebot-plugin-anime-trace.svg?style=social" alt="stars">
+</a>
 </div>
 
 ## 最新情报
