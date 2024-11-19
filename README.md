@@ -116,3 +116,29 @@ _✨ 通过 ai.animedb.cn 的 api 识别动漫、galgame 角色 ✨_
 - [x] 增加 ai 绘图鉴别
 - [ ] 添加结果图片对比
 - [ ] 跨平台兼容
+
+## 跨平台兼容
+
+### Lagrange.OneBot
+
+> send_group_forward_msg
+>
+> | 字段     | 类型       | 说明           |
+> | -------- | ---------- | -------------- |
+> | group_id | uint       | 群号           |
+> | messages | List[Node] | 自定义转发消息 |
+
+> Node
+>
+> | 字段    | 类型                                | 说明     |
+> | ------- | ----------------------------------- | -------- |
+> | uin     | string                              | QQ 号    |
+> | name    | string                              | 昵称     |
+> | content | List[OneBotSegment] / OneBotSegment | 消息内容 |
+
+> send_private_forward_msg
+>
+> | 字段     | 类型       | 说明           |
+> | -------- | ---------- | -------------- |
+> | user_id  | uint       | 好友 QQ 号     |
+> | messages | List[Node] | 自定义转发消息 |
