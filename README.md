@@ -82,17 +82,33 @@ _✨ 通过 ai.animedb.cn 的 api 识别动漫、galgame 角色 ✨_
 
 如果需要自定义配置，请在 nonebot2 项目的`.env`文件中添加配置
 
-|         配置项          | 必填 |          默认值          |              说明              |
-| :---------------------: | :--: | :----------------------: | :----------------------------: |
-| animetrace_send_forward |  否  |          False           |      是否发送合并转发消息      |
-|  animetrace_ai_detect   |  否  |          False           |         是否检测 ai 图         |
-|     animetrace_cmd      |  否  |           "#"            |             命令符             |
-|   animetrace_keyword    |  否  | ["识别", "角色", "人物"] |           命令关键字           |
-|   animetrace_priority   |  否  |            10            |           响应优先级           |
-| animetrace_model_anime  |  否  |       "pre_stable"       |            动漫模型            |
-|  animetrace_model_gal   |  否  |  "game_model_kirakira"   |          galgame 模型          |
-|   animetrace_max_num    |  否  |            3             |  一个角色最多返回几个识别结果  |
-|        nickname         |  否  |     ["anime trace"]      | bot 昵称列表，只取 nickname[0] |
+```py
+class Config(BaseModel):
+    # 是否合并转发消息
+    animetrace_send_forward: bool = True
+    # 是否检测ai图
+    animetrace_ai_detect: bool = True
+    # 是否分多条消息发送:角色,作品,链接
+    animetrace_extract: bool = True
+    # 是否发送萌娘百科链接
+    animetrace_moegirl: bool = False
+    # 自定义搜索链接, 设置为空""则取消
+    animetrace_url: str = "zh.wikipedia.org/w/index.php?search="
+    # 命令符
+    animetrace_cmd: str = "#"
+    # 命令关键字
+    animetrace_keyword: set[str] = {"识别", "角色", "人物"}
+    # 响应优先级
+    animetrace_priority: int = 10
+    # 动漫模型
+    animetrace_model_anime: str = "pre_stable"
+    # galgame模型
+    animetrace_model_gal: str = "game_model_kirakira"
+    # 一个角色最多返回几个识别结果
+    animetrace_max_num: int = 3
+    # bot昵称
+    nickname: list[str] = ["anime trace"]
+```
 
 动漫模型和 galgame 模型请前往 [ai.animedb.cn](https://ai.animedb.cn)查看
 
