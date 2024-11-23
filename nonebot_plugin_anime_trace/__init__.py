@@ -1,8 +1,7 @@
-import json
 from io import BytesIO
 import os
+import tempfile
 
-from httpx import AsyncClient
 from PIL import Image
 from urllib.parse import quote
 from nonebot import logger, on_keyword, get_plugin_config
@@ -23,7 +22,7 @@ from nonebot.typing import T_State
 from nonebot.plugin import PluginMetadata
 
 
-from naotool.exception import NOException
+from naotool import NOException, get_imgs, AutoCloseAsyncClient
 from .config import Config
 
 __plugin_meta__ = PluginMetadata(
@@ -84,15 +83,10 @@ async def get_image(state: T_State, imgs: Message = Arg()):
 async def main(bot: Bot, event: MessageEvent, state: T_State):
     # 拿到图片
     img_urls = state["img_urls"]
-    files = None
-    async with AsyncClient(trust_env=False) as client:
-        res = await client.get(img_urls[0])
-        if res.is_error:
-            await acg_trace.finish("获取图片失败")
-        base_img = Image.open(BytesIO(res.content)).convert("RGB")
-        img_path = os.path.join(os.path.dirname(__file__), "tmp_img.png")
-        base_img.save(img_path)
-        files = {"image": open(img_path, "rb")}
+    base_img: Image.Image = await get_imgs(img_urls[0])  # type: ignore
+    img_path = os.path.join(tempfile.gettempdir(), "acg_trace_tmp_img.jpg")
+    base_img.save(img_path)
+    files = {"image": open(img_path, "rb")}
 
     # 发送请求
     model = state["model"]
@@ -109,11 +103,11 @@ async def main(bot: Bot, event: MessageEvent, state: T_State):
         ),
     }
     try:
-        async with AsyncClient(trust_env=False, proxies=None) as client:
+        async with AutoCloseAsyncClient() as client:
             res = await client.post(
                 url=url, headers=headers, data=None, files=files, timeout=30
             )
-            content = json.loads(res.content)
+            content = res.json()
     except Exception as e:
         logger.exception(f"post({url})失败{repr(e)}")
         await acg_trace.finish(
@@ -195,11 +189,11 @@ def construct_msg(
         )
         char = item["char"]
         may_num = min(conf.animetrace_max_num, len(char))
-        msg_txt = Message(f"该角色有{may_num}种可能\n")
+        txt_msg = Message(f"该角色有{may_num}种可能\n")
         if conf.animetrace_extract:  # 分多条消息发送:角色,作品,链接
-            extract_msg(message_list, mode, img_bytes, char, may_num)
+            extract_msg(message_list, mode, img_bytes, char, may_num, txt_msg)
         else:
-            merge_msg(message_list, mode, img_bytes, char, may_num, msg_txt)
+            merge_msg(message_list, mode, img_bytes, char, may_num, txt_msg)
     return message_list
 
 
@@ -209,12 +203,12 @@ def merge_msg(
     img_bytes: BytesIO,
     char: dict,
     may_num: int,
-    msg_txt: str,
+    txt_msg: Message,
 ):
     for i in range(may_num):
         name = char[i]["name"]
         q = quote(name)
-        msg_txt += (
+        txt_msg += (
             f"\n{i+1}\n"
             f"角色:{name}\n"
             f"来自{mode}:{char[i]['cartoonname']}\n"
@@ -225,7 +219,7 @@ def merge_msg(
             )
             + (f"{conf.animetrace_url}{q}" if conf.animetrace_url else "")
         )
-    message = msg_txt + MessageSegment.image(img_bytes.getvalue())
+    message = txt_msg + MessageSegment.image(img_bytes.getvalue())
     message_list.append(message)
 
 
@@ -235,8 +229,9 @@ def extract_msg(
     img_bytes: BytesIO,
     char: dict,
     may_num: int,
+    txt_msg: Message,
 ):
-    message_list.append(Message(f"该角色有{may_num}种可能\n"))
+    message_list.append(txt_msg)
     for i in range(may_num):
         name = char[i]["name"]
         q = quote(name)
@@ -275,7 +270,8 @@ async def send_forward(
         for msg in message_list
     ]
     # 发送转发消息
-    data = {"messages": msgs}
+    data = {}
+    data["messages"] = msgs
     if isinstance(event, GroupMessageEvent):
         t = "group"
         data["group_id"] = event.group_id
