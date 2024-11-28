@@ -235,12 +235,12 @@ def extract_msg(
     for i in range(may_num):
         name = char[i]["name"]
         q = quote(name)
-        message_list.append(Message(f"{i+1}\n"))
-        message_list.append(Message(f"{name}\n"))
-        message_list.append(Message(f"来自{mode}:{char[i]['cartoonname']}\n"))
+        message_list.append(Message(f"{i+1}"))
+        message_list.append(Message(f"{name}"))
+        message_list.append(Message(f"来自{mode}:{char[i]['cartoonname']}"))
         if conf.animetrace_moegirl:
             message_list.append(
-                Message(f"萌娘百科:zh.moegirl.org.cn/index.php?search={q}\n")
+                Message(f"萌娘百科:zh.moegirl.org.cn/index.php?search={q}")
             )
         if conf.animetrace_url:
             message_list.append(Message(f"{conf.animetrace_url}{q}"))
