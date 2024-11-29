@@ -17,7 +17,7 @@ _✨ 通过 ai.animedb.cn 的 api 识别动漫、galgame 角色 ✨_
   <img src="https://img.shields.io/pypi/v/nonebot-plugin-anime-trace.svg?style=flat&logo=pypi&logoColor=fff&labelColor=3775A9" alt="pypi">
 </a>
 <a href="https://pypi.python.org/pypi/nonebot-plugin-anime-trace">
-  <img src="https://img.shields.io/badge/Python-3.10+-f6a?style=flat&logo=Python&logoColor=fc5&labelColor=3776AB" alt="Python">
+  <img src="https://img.shields.io/badge/Python-3.10+-f09?style=flat&logo=Python&logoColor=fc5&labelColor=3776AB" alt="Python">
 </a>
 <a href="https://github.com/tomorinao-www/naotool">
   <img src="https://img.shields.io/github/stars/tomorinao-www/nonebot-plugin-anime-trace.svg?style=social" alt="stars">
