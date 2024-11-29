@@ -1,7 +1,7 @@
 <div align="center">
-  <a href="https://v2.nonebot.dev/store"><img src="https://github.com/A-kirami/nonebot-plugin-template/blob/resources/nbp_logo.png" width="180" height="180" alt="NoneBotPluginLogo"></a>
+  <a href="https://v2.nonebot.dev/store"><img src="https://raw.githubusercontent.com/A-kirami/nonebot-plugin-template/refs/heads/resources/nbp_logo.png" width="180" height="180" alt="NoneBotPluginLogo"></a>
   <br>
-  <a href="https://v2.nonebot.dev/store"><img src="https://github.com/A-kirami/nonebot-plugin-template/blob/resources/NoneBotPlugin.svg" width="240" alt="NoneBotPluginText"></a>
+  <a href="https://v2.nonebot.dev/store"><img src="https://raw.githubusercontent.com/A-kirami/nonebot-plugin-template/88c60174f63914be62251ffc192cb8b408bbc845/NoneBotPlugin.svg" width="240" alt="NoneBotPluginText"></a>
 </div>
 
 <div align="center">
@@ -11,17 +11,19 @@
 _✨ 通过 ai.animedb.cn 的 api 识别动漫、galgame 角色 ✨_
 
 <a href="https://github.com/tomorinao-www/nonebot-plugin-anime-trace/blob/main/LICENSE">
-  <img src="https://img.shields.io/github/license/tomorinao-www/nonebot-plugin-anime-trace.svg" alt="license">
+  <img src="https://img.shields.io/github/license/tomorinao-www/nonebot-plugin-anime-trace.svg" alt="License">
 </a>
 <a href="https://pypi.python.org/pypi/nonebot-plugin-anime-trace">
-  <img src="https://img.shields.io/pypi/v/nonebot-plugin-anime-trace.svg" alt="pypi">
+  <img src="https://img.shields.io/pypi/v/nonebot-plugin-anime-trace.svg?style=flat&logo=pypi&logoColor=fff&labelColor=3775A9" alt="pypi">
 </a>
-<img src="https://img.shields.io/badge/python-3.10+-blue.svg" alt="python">
+<a href="https://pypi.python.org/pypi/nonebot-plugin-anime-trace">
+  <img src="https://img.shields.io/badge/Python-3.10+-f6a?style=flat&logo=Python&logoColor=fc5&labelColor=3776AB" alt="Python">
+</a>
 <a href="https://github.com/tomorinao-www/naotool">
   <img src="https://img.shields.io/github/stars/tomorinao-www/nonebot-plugin-anime-trace.svg?style=social" alt="stars">
 </a>
 <a href="https://github.com/tomorinao-www/naotool">
-  <img src="https://img.shields.io/github/forks/tomorinao-www/nonebot-plugin-anime-trace.svg?style=social" alt="stars">
+  <img src="https://img.shields.io/github/forks/tomorinao-www/nonebot-plugin-anime-trace.svg?style=social" alt="forks">
 </a>
 </div>
 
