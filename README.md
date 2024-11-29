@@ -161,3 +161,9 @@ class Config(BaseModel):
 > | -------- | ---------- | -------------- |
 > | user_id  | uint       | 好友 QQ 号     |
 > | messages | List[Node] | 自定义转发消息 |
+
+## 赞助
+
+> 救救 developer，孩子吃不起饭了
+> | ![donate-wx](donate-wx.jpg) | ![donate-wx](donate-alipay.jpg) |
+> | -------- | ---------- |
