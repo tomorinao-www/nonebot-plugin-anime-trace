@@ -140,7 +140,7 @@ class Config(BaseModel):
 
 ## 跨平台兼容
 
-### Lagrange.OneBot
+### 合并转发消息
 
 > send_group_forward_msg
 >
@@ -167,5 +167,5 @@ class Config(BaseModel):
 ## 赞助
 
 > 救救 developer，孩子吃不起饭了
-> | ![donate-wx](donate-wx.jpg) | ![donate-wx](donate-alipay.jpg) |
-> | -------- | ---------- |
+> | ![donate-wx](./img/donate-wx.jpg) | ![donate-wx](./img/donate-alipay.jpg) |
+> | --------------------------------- | ------------------------------------- |
