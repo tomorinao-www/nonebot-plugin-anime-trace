@@ -19,7 +19,7 @@ class Config(BaseModel):
     # 响应优先级
     animetrace_priority: int = 10
     # 动漫模型
-    animetrace_model_anime: str = "pre_stable"
+    animetrace_model_anime: str = "anime_model_lovelive"
     # galgame模型
     animetrace_model_gal: str = "game_model_kirakira"
     # 一个角色最多返回几个识别结果

@@ -1,6 +1,7 @@
+import ssl
+import re
+from base64 import b64encode
 from io import BytesIO
-import os
-import tempfile
 
 from PIL import Image
 from urllib.parse import quote
@@ -25,18 +26,6 @@ from nonebot.plugin import PluginMetadata
 from naotool import NOException, get_imgs, AutoCloseAsyncClient
 from .config import Config
 
-import ssl
-import asyncio
-import httpx
-import re
-import io
-# 创建 SSL 兼容上下文，适配 QQ 服务器
-ssl_context = ssl.create_default_context()
-ssl_context.options |= ssl.OP_NO_TLSv1 | ssl.OP_NO_TLSv1_1 | ssl.OP_NO_TLSv1_3  # 关闭不兼容的 TLS 版本
-ssl_context.set_ciphers("HIGH:!aNULL:!MD5")  # 只允许高强度加密
-
-# 适用于 QQ 服务器的 HTTP 客户端
-ntqq_img_client = httpx.AsyncClient(verify=ssl_context)
 
 __plugin_meta__ = PluginMetadata(
     name="识别动漫gal角色",
@@ -92,41 +81,27 @@ async def get_image(state: T_State, imgs: Message = Arg()):
     state["img_urls"] = img_urls
 
 
-
-async def download_image(url: str) -> Image.Image:
-    """
-    从 URL 下载图片并返回 PIL Image 对象
-    """
-    url = re.sub(r'&amp;', '&', url)  # 处理 HTML 转义符
-
-    try:
-        response = await ntqq_img_client.get(url, timeout=15)
-        response.raise_for_status()
-        return Image.open(io.BytesIO(response.content))
-    except Exception as e:
-        logger.error(f"❌ 下载失败: {url}，错误: {e}")
-        raise
-
 @acg_trace.handle()
 async def main(bot: Bot, event: MessageEvent, state: T_State):
     # 拿到图片
     img_urls = state["img_urls"]
-    if not img_urls:
-        await acg_trace.finish("没有获取到图片 URL,请重试")
+    img_url = re.sub(r"&amp;", "&", img_urls[0])  # 处理 HTML 转义符
 
-    # 使用 download_image 方式获取 base_img
-    base_img: Image.Image = await download_image(img_urls[0])
-    img_path = os.path.join(tempfile.gettempdir(), "acg_trace_tmp_img.jpg")
-    base_img.save(img_path)
-    files = {"image": open(img_path, "rb")}
+    ssl_context = ssl.create_default_context()  # 创建 SSL 兼容上下文，适配 QQ 服务器
+    ssl_context.options |= (
+        ssl.OP_NO_TLSv1 | ssl.OP_NO_TLSv1_1 | ssl.OP_NO_TLSv1_3
+    )  # 关闭不兼容的 TLS 版本
+    ssl_context.set_ciphers("HIGH:!aNULL:!MD5")  # 只允许高强度加密
+    ntqq_img_client = AutoCloseAsyncClient(
+        verify=ssl_context
+    )  # 适用于 QQ 服务器的 HTTP 客户端
+    try:
+        base_img: Image.Image = await get_imgs(img_url, ntqq_img_client)
+    except Exception as e:
+        acg_trace.finish(f"获取图片失败\n{repr(e)}", at_sender=True)
 
     # 发送请求
-    model = state["model"]
-    ai_detect = conf.animetrace_ai_detect
-    url = (
-        "https://aiapiv2.animedb.cn/ai/api/detect"
-        f"?force_one=1&model={model}&ai_detect={ai_detect}"
-    )
+    url = "https://api.animetrace.com/v1/search"
     headers = {
         "User-Agent": (
             "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
@@ -134,10 +109,24 @@ async def main(bot: Bot, event: MessageEvent, state: T_State):
             "Chrome/114.0.0.0 Safari/537.36 Edg/114.0.1823.67"
         ),
     }
+    model = state["model"]
+    ai_detect = 1 if conf.animetrace_ai_detect else 0
+    bio = BytesIO()
+    base_img.save(bio, format="JPEG")
+    img_b64 = b64encode(bio.getvalue()).decode()
+    data = {
+        "is_multi": 1,
+        "model": model,
+        "ai_detect": ai_detect,
+        "base64": img_b64,
+    }
     try:
         async with AutoCloseAsyncClient() as client:
             res = await client.post(
-                url=url, headers=headers, data=None, files=files, timeout=30
+                url=url,
+                headers=headers,
+                data=data,
+                timeout=30,
             )
             content = res.json()
     except Exception as e:
@@ -145,9 +134,6 @@ async def main(bot: Bot, event: MessageEvent, state: T_State):
         await acg_trace.finish(
             f"识别失败，换张图片试试吧~\n{res}\n{repr(e)}", at_sender=True
         )
-    finally:
-        files["image"].close()
-        os.remove(img_path)
 
     # 检查识别结果
     if content["code"] != 0:
@@ -214,12 +200,8 @@ def construct_msg(
         )
         img_bytes = BytesIO()
         item_img = base_img.crop(box)
-        item_img.save(
-            img_bytes,
-            format="JPEG",
-            quality=int(item["box"][4] * 100),
-        )
-        char = item["char"]
+        item_img.save(img_bytes, format="JPEG")
+        char = item["character"]
         may_num = min(conf.animetrace_max_num, len(char))
         txt_msg = Message(f"该角色有{may_num}种可能\n")
         if conf.animetrace_extract:  # 分多条消息发送:角色,作品,链接
@@ -238,12 +220,12 @@ def merge_msg(
     txt_msg: Message,
 ):
     for i in range(may_num):
-        name = char[i]["name"]
+        name = char[i]["character"]
         q = quote(name)
         txt_msg += (
             f"\n{i+1}\n"
             f"角色:{name}\n"
-            f"来自{mode}:{char[i]['cartoonname']}\n"
+            f"来自{mode}:{char[i]['work']}\n"
             + (
                 f"萌娘百科:zh.moegirl.org.cn/index.php?search={q}\n"
                 if conf.animetrace_moegirl
@@ -265,11 +247,11 @@ def extract_msg(
 ):
     message_list.append(txt_msg)
     for i in range(may_num):
-        name = char[i]["name"]
+        name = char[i]["character"]
         q = quote(name)
         message_list.append(Message(f"{i+1}"))
         message_list.append(Message(f"{name}"))
-        message_list.append(Message(f"来自{mode}:{char[i]['cartoonname']}"))
+        message_list.append(Message(f"来自{mode}:{char[i]['work']}"))
         if conf.animetrace_moegirl:
             message_list.append(
                 Message(f"萌娘百科:zh.moegirl.org.cn/index.php?search={q}")
