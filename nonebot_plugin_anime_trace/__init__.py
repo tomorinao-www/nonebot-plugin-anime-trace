@@ -25,6 +25,19 @@ from nonebot.plugin import PluginMetadata
 from naotool import NOException, get_imgs, AutoCloseAsyncClient
 from .config import Config
 
+import ssl
+import asyncio
+import httpx
+import re
+import io
+# 创建 SSL 兼容上下文，适配 QQ 服务器
+ssl_context = ssl.create_default_context()
+ssl_context.options |= ssl.OP_NO_TLSv1 | ssl.OP_NO_TLSv1_1 | ssl.OP_NO_TLSv1_3  # 关闭不兼容的 TLS 版本
+ssl_context.set_ciphers("HIGH:!aNULL:!MD5")  # 只允许高强度加密
+
+# 适用于 QQ 服务器的 HTTP 客户端
+ntqq_img_client = httpx.AsyncClient(verify=ssl_context)
+
 __plugin_meta__ = PluginMetadata(
     name="识别动漫gal角色",
     description="通过ai.animedb.cn的api识别动漫、galgame角色",
@@ -79,11 +92,30 @@ async def get_image(state: T_State, imgs: Message = Arg()):
     state["img_urls"] = img_urls
 
 
+
+async def download_image(url: str) -> Image.Image:
+    """
+    从 URL 下载图片并返回 PIL Image 对象
+    """
+    url = re.sub(r'&amp;', '&', url)  # 处理 HTML 转义符
+
+    try:
+        response = await ntqq_img_client.get(url, timeout=15)
+        response.raise_for_status()
+        return Image.open(io.BytesIO(response.content))
+    except Exception as e:
+        logger.error(f"❌ 下载失败: {url}，错误: {e}")
+        raise
+
 @acg_trace.handle()
 async def main(bot: Bot, event: MessageEvent, state: T_State):
     # 拿到图片
     img_urls = state["img_urls"]
-    base_img: Image.Image = await get_imgs(img_urls[0])  # type: ignore
+    if not img_urls:
+        await acg_trace.finish("没有获取到图片 URL,请重试")
+
+    # 使用 download_image 方式获取 base_img
+    base_img: Image.Image = await download_image(img_urls[0])
     img_path = os.path.join(tempfile.gettempdir(), "acg_trace_tmp_img.jpg")
     base_img.save(img_path)
     files = {"image": open(img_path, "rb")}
