@@ -6,7 +6,7 @@ class Config(BaseModel):
     animetrace_send_forward: bool = True
     # 是否检测ai图
     animetrace_ai_detect: bool = True
-    # 是否分多条消息发送:角色,作品,链接
+    # 是否拆分每个识别结果:角色,作品,链接
     animetrace_extract: bool = True
     # 是否发送萌娘百科链接
     animetrace_moegirl: bool = False
@@ -21,7 +21,7 @@ class Config(BaseModel):
     # 动漫模型
     animetrace_model_anime: str = "anime_model_lovelive"
     # galgame模型
-    animetrace_model_gal: str = "game_model_kirakira"
+    animetrace_model_gal: str = "full_game_model_kira"
     # 一个角色最多返回几个识别结果
     animetrace_max_num: int = 3
     # bot昵称
