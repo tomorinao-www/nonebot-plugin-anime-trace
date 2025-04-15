@@ -19,10 +19,10 @@ _✨ 通过 ai.animedb.cn 的 api 识别动漫、galgame 角色 ✨_
 <a href="https://pypi.python.org/pypi/nonebot-plugin-anime-trace">
   <img src="https://img.shields.io/badge/Python-3.10+-f09?style=flat&logo=Python&logoColor=fc5&labelColor=3776AB" alt="Python">
 </a>
-<a href="https://github.com/tomorinao-www/naotool">
+<a href="https://github.com/tomorinao-www/nonebot-plugin-anime-trace">
   <img src="https://img.shields.io/github/stars/tomorinao-www/nonebot-plugin-anime-trace.svg?style=social" alt="stars">
 </a>
-<a href="https://github.com/tomorinao-www/naotool">
+<a href="https://github.com/tomorinao-www/nonebot-plugin-anime-trace/forks">
   <img src="https://img.shields.io/github/forks/tomorinao-www/nonebot-plugin-anime-trace.svg?style=social" alt="forks">
 </a>
 </div>
