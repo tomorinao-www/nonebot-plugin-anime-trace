@@ -17,6 +17,7 @@ nonebot-adapter-onebot = ">=2.2.3"
 httpx = ">=0.24.0"
 pillow = ">=9.5.0"
 naotool = ">=0.3.4"
+pydantic = "^2.11.3"
 
 [build-system]
 requires = ["poetry-core"]
